@@ -1,0 +1,256 @@
+This is a dump from BusDog, decoded mainly by spec reading.  The dongle is a composite device, with two HID interfaces that send reports of 32 bytes at a time.
+
+BusDog: http://code.google.com/p/busdog/
+USB HID: http://www.usb.org/developers/devclass_docs/HID1_11.pdf
+
+Id    Type    Time    Length    Hex    Ascii    
+
+11    In  (USB URB Function: 8)                     0.000000    18    12 01 00 02 00 00 00 20 87 26 01 fb 00 01 01 02 03 01    ....... .&........    
+                                                                      -- -- ----- -------- -- ----- ----- ----- -- -- -- -- 
+                                                                      |  |   |       |     |    |     |     |   |  |  |
+// This is the DEVICE descriptor                                      |  |   |       |     |    |     |     |   |  |  index to serial number string (3)
+// http://www.usbmadesimple.co.uk/ums_ms_desc_dev.htm                 |  |   |       |     |    |     |     |   |  index to product string (2)
+                                                                      |  |   |       |     |    |     |     |   index to manufacturer string (1) 
+                                                                      |  |   |       |     |    |     |     device ID (0100)
+                                                                      |  |   |       |     |    |     product ID (0xfb01)
+                                                                      |  |   |       |     |    vendor ID (0x2687)
+                                                                      |  |   |       |     max in/out packet size on EP0 (32 bytes)
+                                                                      |  |   |       device class (described in INTERFACE)
+                                                                      |  |   version of USB (2.0)
+                                                                      |  descriptor type (DEVICE)
+                                                                      length (18 bytes)
+
+11    In  (USB URB Function: 8)                     0.002320    9     09 02 49 00 02 01 00 80 19    ..I......    
+                                                                      -- -- ----- -- -- -- -- --
+                                                                      |  |    |   |  |  |  |  |
+                                                                      |  |    |   |  |  |  |  max power consumption in 2mA units (50mA)
+// This is the CONFIGURATION descriptor                               |  |    |   |  |  |  attributes bitfield (0x80 = bus-powered)
+// http://www.usbmadesimple.co.uk/ums_ms_desc_conf.htm                |  |    |   |  |  index to configuration description string (0 = not present)
+// NOTE: This only requests the first 9 bytes of the CONFIGURATION    |  |    |   |  value to use when requesting configuration (1)
+// descriptor because it doesn't know what the total length is yet    |  |    |   number of interfaces supported by this configuration (2 interfaces will follow)
+                                                                      |  |    total length of configuration descriptor collection (73)
+                                                                      |  descriptor type (CONFIGURATION)
+                                                                      length (9 bytes)
+
+11    In  (USB URB Function: 8)                     0.002402    73    09 02 49 00 02 01 00 80 19 09 04 00 00 02 03 00 00 00 09 21 11 01 00 01 22 36 00 07 05 81 03 20 00 02 07 05 01 03 20 00 02 09 04 01 00 02 03 00 00 00 09 21 11 01 00 01 22 36 00 07 05 82 03 20 00 02 07 05 02 03 20 00 02    ..I................!...."6..... ...... ............!...."6..... ...... ..    
+                                                                                                 -- -- -- -- -- -- -- -- --
+                                                                                                 |  |  |  |  |  |  |  |  |
+                                                                                                 |  |  |  |  |  |  |  |  index to interface description string (0 = not present)
+                                                                                                 |  |  |  |  |  |  |  interface protocol (0 = n/a)
+// This is the first INTERFACE descriptor                                                        |  |  |  |  |  |  interface subclass (0 = n/a)
+// http://www.usbmadesimple.co.uk/ums_ms_desc_conf.htm                                           |  |  |  |  |  interface class (3 = HID)
+                                                                                                 |  |  |  |  number of endpoints used by this interface, excluding EP0 (2)
+                                                                                                 |  |  |  alternate interface setting (0, so n/a)
+                                                                                                 |  |  interface number (0)
+                                                                                                 |  descriptor type (INTERFACE)
+                                                                                                 length (9 bytes)                                                               
+
+11    In  (USB URB Function: 8)                     0.002402    73    09 02 49 00 02 01 00 80 19 09 04 00 00 02 03 00 00 00 09 21 11 01 00 01 22 36 00 07 05 81 03 20 00 02 07 05 01 03 20 00 02 09 04 01 00 02 03 00 00 00 09 21 11 01 00 01 22 36 00 07 05 82 03 20 00 02 07 05 02 03 20 00 02    ..I................!...."6..... ...... ............!...."6..... ...... ..    
+                                                                                                                            -- -- ----- -- -- -- -----
+                                                                                                                            |  |  |     |  |  |  |
+                                                                                                                            |  |  |     |  |  |  length of following descriptor (54)
+// This is the HID descriptor on the first interface                                                                        |  |  |     |  |  type of following descriptor (34 = HID REPORT)
+// http://www.usbmadesimple.co.uk/ums_ms_desc_conf.htm                                                                      |  |  |     |  number of following descriptors (1)
+                                                                                                                            |  |  |     country code (n/a)
+                                                                                                                            |  |  HID class specification version (1.11)
+                                                                                                                            |  descriptor type (HID)
+                                                                                                                            length (9 bytes)
+                                                                                                 
+11    In  (USB URB Function: 8)                     0.002402    73    09 02 49 00 02 01 00 80 19 09 04 00 00 02 03 00 00 00 09 21 11 01 00 01 22 36 00 07 05 81 03 20 00 02 07 05 01 03 20 00 02 09 04 01 00 02 03 00 00 00 09 21 11 01 00 01 22 36 00 07 05 82 03 20 00 02 07 05 02 03 20 00 02    ..I................!...."6..... ...... ............!...."6..... ...... ..    
+                                                                                                                                                       -- -- -- -- ----- --
+                                                                                                                                                       |  |  |  |  |     |
+// This is the first ENDPOINT descriptor on the first interface                                                                                        |  |  |  |  |     requested polling interval (every 2 frames)
+// http://www.usbmadesimple.co.uk/ums_ms_desc_conf.htm                                                                                                 |  |  |  |  max packet size (32 bytes)
+                                                                                                                                                       |  |  |  endpoint attributes bitfield (3 = interrupt, data endpoint)
+                                                                                                                                                       |  |  endpoint address (EP1 - IN)
+                                                                                                                                                       |  descriptor type (ENDPOINT)
+                                                                                                                                                       length (7 bytes)
+
+11    In  (USB URB Function: 8)                     0.002402    73    09 02 49 00 02 01 00 80 19 09 04 00 00 02 03 00 00 00 09 21 11 01 00 01 22 36 00 07 05 81 03 20 00 02 07 05 01 03 20 00 02 09 04 01 00 02 03 00 00 00 09 21 11 01 00 01 22 36 00 07 05 82 03 20 00 02 07 05 02 03 20 00 02    ..I................!...."6..... ...... ............!...."6..... ...... ..    
+                                                                                                                                                                            -- -- -- -- ----- --
+                                                                                                                                                                            |  |  |  |  |     |
+// This is the second ENDPOINT descriptor on the first interface                                                                                                            |  |  |  |  |     requested polling interval (every 2 frames)
+// http://www.usbmadesimple.co.uk/ums_ms_desc_conf.htm                                                                                                                      |  |  |  |  max packet size (32 bytes)
+                                                                                                                                                                            |  |  |  endpoint attributes bitfield (3 = interrupt, data endpoint)
+                                                                                                                                                                            |  |  endpoint address (EP1 - OUT)
+                                                                                                                                                                            |  descriptor type (ENDPOINT)
+                                                                                                                                                                            length (7 bytes)
+
+11    In  (USB URB Function: 8)                     0.002402    73    09 02 49 00 02 01 00 80 19 09 04 00 00 02 03 00 00 00 09 21 11 01 00 01 22 36 00 07 05 81 03 20 00 02 07 05 01 03 20 00 02 09 04 01 00 02 03 00 00 00 09 21 11 01 00 01 22 36 00 07 05 82 03 20 00 02 07 05 02 03 20 00 02    ..I................!...."6..... ...... ............!...."6..... ...... ..    
+                                                                                                                                                                                                 -- -- -- -- -- -- -- -- --
+                                                                                                                                                                                                 |  |  |  |  |  |  |  |  |
+                                                                                                                                                                                                 |  |  |  |  |  |  |  |  index to interface description string (0 = not present)
+                                                                                                                                                                                                 |  |  |  |  |  |  |  interface protocol (0 = n/a)
+// This is the second INTERFACE descriptor                                                                                                                                                       |  |  |  |  |  |  interface subclass (0 = n/a)
+// http://www.usbmadesimple.co.uk/ums_ms_desc_conf.htm                                                                                                                                           |  |  |  |  |  interface class (3 = HID)
+                                                                                                                                                                                                 |  |  |  |  number of endpoints used by this interface, excluding EP0 (2)
+                                                                                                                                                                                                 |  |  |  alternate interface setting (0, so n/a)
+                                                                                                                                                                                                 |  |  interface number (1)
+                                                                                                                                                                                                 |  descriptor type (INTERFACE)
+                                                                                                                                                                                                 length (9 bytes)                                                               
+
+11    In  (USB URB Function: 8)                     0.002402    73    09 02 49 00 02 01 00 80 19 09 04 00 00 02 03 00 00 00 09 21 11 01 00 01 22 36 00 07 05 81 03 20 00 02 07 05 01 03 20 00 02 09 04 01 00 02 03 00 00 00 09 21 11 01 00 01 22 36 00 07 05 82 03 20 00 02 07 05 02 03 20 00 02    ..I................!...."6..... ...... ............!...."6..... ...... ..    
+                                                                                                                                                                                                                            -- -- ----- -- -- -- -----
+                                                                                                                                                                                                                            |  |  |     |  |  |  |
+                                                                                                                                                                                                                            |  |  |     |  |  |  length of following descriptor (54, see this descriptor way below)
+// This is the HID descriptor on the second interface                                                                                                                                                                       |  |  |     |  |  type of following descriptor (34 = HID REPORT)
+// http://www.usbmadesimple.co.uk/ums_ms_desc_conf.htm                                                                                                                                                                      |  |  |     |  number of following descriptors (1)
+                                                                                                                                                                                                                            |  |  |     country code (n/a)
+                                                                                                                                                                                                                            |  |  HID class specification version (1.11)
+                                                                                                                                                                                                                            |  descriptor type (HID)
+                                                                                                                                                                                                                            length (9 bytes)
+
+11    In  (USB URB Function: 8)                     0.002402    73    09 02 49 00 02 01 00 80 19 09 04 00 00 02 03 00 00 00 09 21 11 01 00 01 22 36 00 07 05 81 03 20 00 02 07 05 01 03 20 00 02 09 04 01 00 02 03 00 00 00 09 21 11 01 00 01 22 36 00 07 05 82 03 20 00 02 07 05 02 03 20 00 02    ..I................!...."6..... ...... ............!...."6..... ...... ..    
+                                                                                                                                                                                                                                                       -- -- -- -- ----- --
+                                                                                                                                                                                                                                                       |  |  |  |  |     |
+// This is the first ENDPOINT descriptor on the second interface                                                                                                                                                                                       |  |  |  |  |     requested polling interval (every 2 frames)
+// http://www.usbmadesimple.co.uk/ums_ms_desc_conf.htm                                                                                                                                                                                                 |  |  |  |  max packet size (32 bytes)
+                                                                                                                                                                                                                                                       |  |  |  endpoint attributes bitfield (3 = interrupt, data endpoint)
+                                                                                                                                                                                                                                                       |  |  endpoint address (EP2 - IN)
+                                                                                                                                                                                                                                                       |  descriptor type (ENDPOINT)
+                                                                                                                                                                                                                                                       length (7 bytes)
+
+11    In  (USB URB Function: 8)                     0.002402    73    09 02 49 00 02 01 00 80 19 09 04 00 00 02 03 00 00 00 09 21 11 01 00 01 22 36 00 07 05 81 03 20 00 02 07 05 01 03 20 00 02 09 04 01 00 02 03 00 00 00 09 21 11 01 00 01 22 36 00 07 05 82 03 20 00 02 07 05 02 03 20 00 02    ..I................!...."6..... ...... ............!...."6..... ...... ..    
+                                                                                                                                                                                                                                                                            -- -- -- -- ----- --
+                                                                                                                                                                                                                                                                            |  |  |  |  |     |
+// This is the second ENDPOINT descriptor on the second interface                                                                                                                                                                                                           |  |  |  |  |     requested polling interval (every 2 frames)
+// http://www.usbmadesimple.co.uk/ums_ms_desc_conf.htm                                                                                                                                                                                                                      |  |  |  |  max packet size (32 bytes)
+                                                                                                                                                                                                                                                                            |  |  |  endpoint attributes bitfield (3 = interrupt, data endpoint)
+                                                                                                                                                                                                                                                                            |  |  endpoint address (EP2 - OUT)
+                                                                                                                                                                                                                                                                            |  descriptor type (ENDPOINT)
+                                                                                                                                                                                                                                                                            length (7 bytes)
+11    In  (USB URB Function: 8)                     0.040528    4     28 03 46 00    (.F.    
+11    In  (USB URB Function: 8)                     0.002141    40    28 03 46 00 69 00 74 00 62 00 69 00 74 00 20 00 42 00 61 00 73 00 65 00 20 00 53 00 74 00 61 00 74 00 69 00 6f 00 6e 00    (.F.i.t.b.i.t. .B.a.s.e. .S.t.a.t.i.o.n.    
+                                                                      -- -- ---------...
+                                                                      |  |  |
+// This is the STRING descriptor                                      |  |  full unicode string
+// The first 4 bytes are requested first, so that the caller          |  descriptor type (STRING)
+// can determine the total length                                     length of descriptor
+
+
+// The sub-devices are enumerated, so the following descriptors just repeat the same info
+11    In  (USB URB Function: 8)                     0.001778    4     28 03 46 00    (.F.    
+11    In  (USB URB Function: 8)                     0.002000    40    28 03 46 00 69 00 74 00 62 00 69 00 74 00 20 00 42 00 61 00 73 00 65 00 20 00 53 00 74 00 61 00 74 00 69 00 6f 00 6e 00    (.F.i.t.b.i.t. .B.a.s.e. .S.t.a.t.i.o.n.    
+12    URB_FUNCTION_GET_DESCRIPTOR_FROM_DEVICE       0.000408    18    12 01 00 02 00 00 00 20 87 26 01 fb 00 01 01 02 03 01    ....... .&........    
+12    URB_FUNCTION_GET_DESCRIPTOR_FROM_DEVICE       0.000008    9     09 02 29 00 01 01 00 80 19    ..)......    
+12    URB_FUNCTION_GET_DESCRIPTOR_FROM_DEVICE       0.000004    41    09 02 29 00 01 01 00 80 19 09 04 00 00 02 03 00 00 00 09 21 11 01 00 01 22 36 00 07 05 81 03 20 00 02 07 05 01 03 20 00 02    ..)................!...."6..... ...... ..    
+
+11    In  (USB URB Function: 8)                     1.004530    54    06 0a ff 09 01 a1 01 09 02 a1 00 06 00 ff 09 03 09 04 15 80 25 7f 35 00 46 ff 00 75 08 95 20 81 02 09 05 09 06 15 80 25 7f 35 00 46 ff 00 75 08 95 20 91 02 c0 c0    ....................%5.F..u.. ........%5.F..u.. ....    
+                                                                      -------- ----- ----- ----- ----- -------- ----- ----- ----- ----- ----- -------- ----- ----- ----- ----- ----- ----- ----- ----- -------- ----- ----- ----- -- --
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |        |     |     |     |     |     |     |     |     |        |     |     |     |  |
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |        |     |     |     |     |     |     |     |     |        |     |     |     |  end collection
+ // This is the HID REPORT descriptor, which tells the HID            |        |     |     |     |     |        |     |     |     |     |     |        |     |     |     |     |     |     |     |     |        |     |     |     end collection
+ // subsystem what data to expect from the device                     |        |     |     |     |     |        |     |     |     |     |     |        |     |     |     |     |     |     |     |     |        |     |     output (data, variable, absolute, no wrap, linear, preferred state, no null position)
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |        |     |     |     |     |     |     |     |     |        |     |        0x91 -- binary 1001 00 01 -- 1001 = output; 00 = main; 01 = one byte follows
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |        |     |     |     |     |     |     |     |     |        |     |        0x20 -- 32
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |        |     |     |     |     |     |     |     |     |        |     report count (32 data fields)
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |        |     |     |     |     |     |     |     |     |        |        0x95 -- binary 1001 01 01 -- 1001 = report count; 01 = global; 01 = one byte follows
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |        |     |     |     |     |     |     |     |     |        |        0x20 -- 32
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |        |     |     |     |     |     |     |     |     |        report size (8 bits)
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |        |     |     |     |     |     |     |     |     |           0x75 -- binary 0111 01 01 -- 0111 = report size; 01 = global; 01 = one byte follows
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |        |     |     |     |     |     |     |     |     |           0x08 -- 8 bits
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |        |     |     |     |     |     |     |     |     physical maximum (255)
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |        |     |     |     |     |     |     |     |        0x46 -- binary 0100 01 10 -- 0100 = physical maximum; 01 = global; 10 = two bytes follows
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |        |     |     |     |     |     |     |     |        0x00FF -- 255 (need the second byte to make it non-negative?)
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |        |     |     |     |     |     |     |     physical minimum (0)
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |        |     |     |     |     |     |     |        0x35 -- binary 0011 01 01 -- 0011 = physical minimum; 01 = global; 01 = one byte follows
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |        |     |     |     |     |     |     |        0x00 -- 0
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |        |     |     |     |     |     |     logical maximum (128)
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |        |     |     |     |     |     |        0x25 -- binary 0010 01 01 -- 0010 = logical maximum; 01 = global; 01 = one byte follows
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |        |     |     |     |     |     |        0x7F -- 128
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |        |     |     |     |     |     logical minimum (-127)
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |        |     |     |     |     |        0x15 -- binary 0001 01 01 -- 0001 = logical minimum; 01 = global; 01 = one byte follows
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |        |     |     |     |     |        0x80 -- -127
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |        |     |     |     |     usage (vendor-defined 6)
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |        |     |     |     |        0x09 -- binary 0000 10 01 -- 0000 = usage; 10 = local; 01 = one byte follows
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |        |     |     |     |        0x06 -- since usage page is vendor-defined, all usages are vendor-defined)
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |        |     |     |     usage (vendor-defined 5)
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |        |     |     |        0x09 -- binary 0000 10 01 -- 0000 = usage; 10 = local; 01 = one byte follows
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |        |     |     |        0x05 -- since usage page is vendor-defined, all usages are vendor-defined)
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |        |     |     input (data, variable, absolute, no wrap, linear, preferred state, no null position)
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |        |     |        0x81 -- binary 1000 00 01 -- 1000 = input; 00 = main; 01 = one byte follows
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |        |     |        0x20 -- 32
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |        |     report count (32 data fields)
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |        |        0x95 -- binary 1001 01 01 -- 1001 = report size; 01 = global; 01 = one byte follows
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |        |        0x20 -- 32
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |        report size (8 bits)
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |           0x75 -- binary 0111 01 01 -- 0111 = report size; 01 = global; 01 = one byte follows
+                                                                      |        |     |     |     |     |        |     |     |     |     |     |           0x08 -- 8 bits
+                                                                      |        |     |     |     |     |        |     |     |     |     |     physical maximum (255)
+                                                                      |        |     |     |     |     |        |     |     |     |     |        0x46 -- binary 0100 01 10 -- 0100 = physical maximum; 01 = global; 10 = two bytes follows
+                                                                      |        |     |     |     |     |        |     |     |     |     |        0x00FF -- 255 (need the second byte to make it non-negative?)
+                                                                      |        |     |     |     |     |        |     |     |     |     physical minimum (0)
+                                                                      |        |     |     |     |     |        |     |     |     |        0x35 -- binary 0011 01 01 -- 0011 = physical minimum; 01 = global; 01 = one byte follows
+                                                                      |        |     |     |     |     |        |     |     |     |        0x00 -- 0
+                                                                      |        |     |     |     |     |        |     |     |     logical maximum (128)
+                                                                      |        |     |     |     |     |        |     |     |        0x25 -- binary 0010 01 01 -- 0010 = logical maximum; 01 = global; 01 = one byte follows
+                                                                      |        |     |     |     |     |        |     |     |        0x7F -- 128
+                                                                      |        |     |     |     |     |        |     |     logical minimum (-127)
+                                                                      |        |     |     |     |     |        |     |        0x15 -- binary 0001 01 01 -- 0001 = logical minimum; 01 = global; 01 = one byte follows
+                                                                      |        |     |     |     |     |        |     |        0x80 -- -127
+                                                                      |        |     |     |     |     |        |     usage (vendor-defined 4)
+                                                                      |        |     |     |     |     |        |        0x09 -- binary 0000 10 01 -- 0000 = usage; 10 = local; 01 = one byte follows
+                                                                      |        |     |     |     |     |        |        0x04 -- since usage page is vendor-defined, all usages are vendor-defined)
+                                                                      |        |     |     |     |     |        usage (vendor-defined 3)
+                                                                      |        |     |     |     |     |           0x09 -- binary 0000 10 01 -- 0000 = usage; 10 = local; 01 = one byte follows
+                                                                      |        |     |     |     |     |           0x03 -- since usage page is vendor-defined, all usages are vendor-defined)
+                                                                      |        |     |     |     |     usage page (vendor-defined)
+                                                                      |        |     |     |     |        0x06 -- binary 0000 01 10 -- 0000 = usage page; 01 = global; 10 = two bytes follow
+                                                                      |        |     |     |     |        0xFF00 -- vendor-defined
+                                                                      |        |     |     |     collection (application)
+                                                                      |        |     |     |        0xA1 -- binary 1010 00 01 -- 1010 = collection; 01 = one byte follows)
+                                                                      |        |     |     |        0x00 -- physical
+                                                                      |        |     |     usage (vendor-defined 2)
+                                                                      |        |     |        0x09 -- binary 0000 10 01 -- 0000 = usage; 10 = local; 01 = one byte follows
+                                                                      |        |     |        0x02 -- since usage page is vendor-defined, all usages are vendor-defined)
+                                                                      |        |     collection (application)
+                                                                      |        |        0xA1 -- binary 1010 00 01 -- 1010 = collection; 01 = one byte follows)
+                                                                      |        |        0x01 -- application
+                                                                      |        usage (vendor-defined 1)
+                                                                      |           0x09 -- binary 0000 10 01 -- 0000 = usage; 10 = local; 01 = one byte follows
+                                                                      |           0x01 -- since usage page is vendor-defined, all usages are vendor-defined)
+                                                                      usage page (vendor-defined)
+                                                                         0x06 -- binary 0000 01 10 -- 0000 = usage page; 01 = global; 10 = two bytes follow
+                                                                         0xFF0A -- vendor-defined
+
+12    In  (USB URB Function: 8)                     0.000005    54    06 0a ff 09 01 a1 01 09 02 a1 00 06 00 ff 09 03 09 04 15 80 25 7f 35 00 46 ff 00 75 08 95 20 81 02 09 05 09 06 15 80 25 7f 35 00 46 ff 00 75 08 95 20 91 02 c0 c0    ....................%5.F..u.. ........%5.F..u.. ....    
+
+
+// The sub-devices are enumerated, so the following descriptors just repeat the same info
+13    URB_FUNCTION_GET_DESCRIPTOR_FROM_DEVICE       0.000472    18    12 01 00 02 00 00 00 20 87 26 01 fb 00 01 01 02 03 01    ....... .&........    
+13    URB_FUNCTION_GET_DESCRIPTOR_FROM_DEVICE       0.000008    9     09 02 29 00 01 01 00 80 19    ..)......    
+13    URB_FUNCTION_GET_DESCRIPTOR_FROM_DEVICE       0.000005    41    09 02 29 00 01 01 00 80 19 09 04 01 00 02 03 00 00 00 09 21 11 01 00 01 22 36 00 07 05 82 03 20 00 02 07 05 02 03 20 00 02    ..)................!...."6..... ...... ..    
+11    In  (USB URB Function: 8)                     0.004452    54    06 0a ff 09 01 a1 01 09 02 a1 00 06 00 ff 09 03 09 04 15 80 25 7f 35 00 46 ff 00 75 08 95 20 81 02 09 05 09 06 15 80 25 7f 35 00 46 ff 00 75 08 95 20 91 02 c0 c0    ....................%5.F..u.. ........%5.F..u.. ....    
+13    In  (USB URB Function: 8)                     0.000006    54    06 0a ff 09 01 a1 01 09 02 a1 00 06 00 ff 09 03 09 04 15 80 25 7f 35 00 46 ff 00 75 08 95 20 81 02 09 05 09 06 15 80 25 7f 35 00 46 ff 00 75 08 95 20 91 02 c0 c0    ....................%5.F..u.. ........%5.F..u.. ....    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
